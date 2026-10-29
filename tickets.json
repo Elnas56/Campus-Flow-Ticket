@@ -1,0 +1,9 @@
+import json
+
+tickets = [
+    {"id": "T001", "title": "Network Issues"},
+    {"id": "T002", "title": "Keyboard Fault"}
+]
+
+with open("tickets.json","w",encoding="utf-8") as file:
+    json.dump(tickets,file, indent=4)
