@@ -7,3 +7,56 @@ tickets = [
 
 with open("tickets.json","w",encoding="utf-8") as file:
     json.dump(tickets,file, indent=4)
+
+def main():
+    tickets = load_tickets()
+
+    title = input("Enter ticket title: ")
+    description = input("Enter ticket description: ")
+
+    if not title.strip() or not description.strip():
+        print("Invalid Input")
+    else:
+        print("Input is valid")
+
+main()
+
+import json
+import uuid
+
+def load_tickets():
+    try:
+        with open("tickets.json", "r", encoding="utf-8") as file:
+            tickets = json.load(file)
+            return tickets
+
+    except FileNotFoundError:
+        return []
+
+    except json.JSONDecodeError:
+        print("Error: tickets.json contains invalid JSON.")
+        raise SystemExit
+
+def save_tickets(tickets):
+    with open("tickets.json", "w", encoding="utf-8") as file:
+        json.dump(tickets, file, indent=4)
+
+def main():
+    tickets = load_tickets()
+
+    title = input("Enter ticket title: ")
+    description = input("Enter ticket description: ")
+
+    if not title.strip() or not description.strip():
+        print("Invalid Input")
+    else:
+        print("Input is valid")
+        ticket_id = str(uuid.uuid4())
+        ticket = {
+    "id": ticket_id,
+    "title": title,
+    "description": description
+}
+
+main()
+
