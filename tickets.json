@@ -1,27 +1,4 @@
 import json
-
-tickets = [
-    {"id": "T001", "title": "Network Issues"},
-    {"id": "T002", "title": "Keyboard Fault"}
-]
-
-with open("tickets.json","w",encoding="utf-8") as file:
-    json.dump(tickets,file, indent=4)
-
-def main():
-    tickets = load_tickets()
-
-    title = input("Enter ticket title: ")
-    description = input("Enter ticket description: ")
-
-    if not title.strip() or not description.strip():
-        print("Invalid Input")
-    else:
-        print("Input is valid")
-
-main()
-
-import json
 import uuid
 
 def load_tickets():
@@ -53,10 +30,16 @@ def main():
         print("Input is valid")
         ticket_id = str(uuid.uuid4())
         ticket = {
-    "id": ticket_id,
-    "title": title,
-    "description": description
-}
+            "id": ticket_id,
+            "title": title,
+            "description": description
+        }
+
+        tickets.append(ticket)
+
+        save_tickets(tickets)
+
+        print("Ticket created successfully!")
 
 main()
 
