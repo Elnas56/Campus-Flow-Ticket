@@ -56,9 +56,10 @@ def analyze_ticket(description):
     3. Further investigation if the problem persists.
     """
     interaction = client.interactions.create(
-    model="gemini-3.8-flash",
-    input=prompt
-)
+        model="gemini-3.8-flash",
+        input=prompt
+    )
+    print(interaction.output_text)
 
 def main():
     tickets = load_tickets()
@@ -87,6 +88,7 @@ def main():
         print("Save result:", saved)
         if saved:
             print("Ticket created successfully!")
+            analyze_ticket(ticket["description"])
 
         else:
             print("Ticket creation failed!")
