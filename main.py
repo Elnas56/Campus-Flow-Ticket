@@ -43,6 +43,22 @@ def save_tickets(tickets):
         print("Unable to save tickets.")
         return False
 
+def analyze_ticket(description):
+    prompt = f"""
+    You are a campus IT support assistant.
+
+    Analyze this technical problem:
+    {description}
+
+    Provide:
+    1. Possible causes.
+    2. Recommended troubleshooting steps.
+    3. Further investigation if the problem persists.
+    """
+    interaction = client.interactions.create(
+    model="gemini-3.8-flash",
+    input=prompt
+)
 
 def main():
     tickets = load_tickets()
