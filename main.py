@@ -44,22 +44,32 @@ def save_tickets(tickets):
         return False
 
 def analyze_ticket(description):
-    prompt = f"""
-    You are a campus IT support assistant.
+    api_key = os.getenv("GEMINI_API_KEY")
 
+    if not api_key:
+        print("AI analysis is currently unavailable.")
+        return
+
+    prompt = f"""
     Analyze this technical problem:
     {description}
 
-    Provide:
-    1. Possible causes.
-    2. Recommended troubleshooting steps.
-    3. Further investigation if the problem persists.
+    Provide possible causes and troubleshooting steps.
     """
-    interaction = client.interactions.create(
-        model="gemini-3.8-flash",
-        input=prompt
-    )
-    print(interaction.output_text)
+
+    try:
+        client = genai.Client(api_key=api_key)
+
+        interaction = client.interactions.create(
+            model="gemini-3.8-flash",
+            input=prompt
+        )
+
+        print(interaction.output_text)
+
+    except Exception as error:
+        print("AI analysis failed:", error)
+    
 
 def main():
     tickets = load_tickets()
