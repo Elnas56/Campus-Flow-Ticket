@@ -23,5 +23,15 @@
         "id": "T005",
         "title": "Software",
         "description": "Bluetootth not function"
+    },
+    {
+        "id": "T006",
+        "title": "Hardware",
+        "description": "Keyboard malfunction"
+    },
+    {
+        "id": "T007",
+        "title": "Printer malfunction",
+        "description": "The library printer is not responding when students send documents to print"
     }
 ]
