@@ -34,8 +34,9 @@ def save_tickets(tickets):
         print("Unable to save tickets.")
         return False
 
-def analyze_ticket(description):
+def analyze_ticket(description, provider):
     api_key = os.getenv("GEMINI_API_KEY")
+    api_key = os.getenv("OPENROUTER_API_KEY")
 
     if not api_key:
         print("AI analysis is currently unavailable.")
@@ -96,3 +97,23 @@ def main():
 
 main()
 
+
+def analyze_ticket(description, provider):
+
+    if provider == "Gemini":
+        print("Connecting to Gemini...")
+
+    elif provider == "OpenAI":
+        print("Connecting to OpenAI...")
+
+    elif provider == "OpenRouter":
+        print("Connecting to OpenRouter...")
+
+    elif provider == "Hugging Face":
+        print("Connecting to Hugging Face...")
+
+    else:
+        print("Unsupported AI provider selected.")
+
+export OPENROUTER_API_KEY="your-secret-key"
+api_key = os.getenv("OPENROUTER_API_KEY")
