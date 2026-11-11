@@ -98,22 +98,45 @@ def main():
 main()
 
 
-def analyze_ticket(description, provider):
+api_keys = {
+    "Gemini": "GEMINI_API_KEY",
+    "OpenAI": "OPENAI_API_KEY",
+    "OpenRouter": "OPENROUTER_API_KEY",
+    "Hugging Face": "HF_TOKEN"
+}
 
-    if provider == "Gemini":
-        print("Connecting to Gemini...")
-
-    elif provider == "OpenAI":
-        print("Connecting to OpenAI...")
-
-    elif provider == "OpenRouter":
-        print("Connecting to OpenRouter...")
-
-    elif provider == "Hugging Face":
-        print("Connecting to Hugging Face...")
-
-    else:
-        print("Unsupported AI provider selected.")
+api_key_name = api_keys["OpenRouter"]
+api_key = os.getenv(api_key_name)
 
 export OPENROUTER_API_KEY="your-secret-key"
 api_key = os.getenv("OPENROUTER_API_KEY")
+
+api_key = os.getenv("OPENAI_API_KEY")
+
+if not api_key:
+    print("OpenAI API key is not configured.")
+    return
+
+import os 
+
+def get_api_key(provider):
+    api_keys = {
+    "Gemini": "GEMINI_API_KEY",
+    "OpenAI": "OPENAI_API_KEY",
+    "OpenRouter": "OPENROUTER_API_KEY",
+    "Hugging Face": "HF_TOKEN"
+    }
+    
+    if provider not in api_key:
+        print(f"Unsupported AI provider.")
+        return
+ 
+    api_key_name = api_keys[provider]
+    api_key = os.getenv(api_key_name)
+     
+    if not api_key:
+        print(f"{provider} key is not configured.")
+        return
+
+    return api_key
+    
