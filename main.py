@@ -2,6 +2,28 @@ import json
 import os
 from google import genai
 
+def get_api_key(provider):
+    api_keys = {
+    "Gemini": "GEMINI_API_KEY",
+    "OpenAI": "OPENAI_API_KEY",
+    "OpenRouter": "OPENROUTER_API_KEY",
+    "Hugging Face": "HF_TOKEN"
+    }
+    
+    if provider not in api_keys:
+        print(f"Unsupported AI provider.")
+        return
+ 
+    api_key_name = api_keys[provider]
+    api_key = os.getenv(api_key_name)
+     
+    if not api_key:
+        print(f"{provider} key is not configured.")
+        return
+
+    return api_key
+    
+
 def load_tickets():
     try:
         with open("tickets.json", "r", encoding="utf-8") as file:
@@ -35,6 +57,7 @@ def save_tickets(tickets):
         return False
 
 def analyze_ticket(description, provider):
+    
     api_key = os.getenv("GEMINI_API_KEY")
     api_key = os.getenv("OPENROUTER_API_KEY")
 
@@ -97,46 +120,25 @@ def main():
 
 main()
 
+print("Choose an AI provider: ") 
+print("1. Gemini")
+print("2. OpenAI")
+print("3. OpenRouter")
+print("4. Hugging Face")
+choice = input("Enter your choice (1-4): ")
 
-api_keys = {
-    "Gemini": "GEMINI_API_KEY",
-    "OpenAI": "OPENAI_API_KEY",
-    "OpenRouter": "OPENROUTER_API_KEY",
-    "Hugging Face": "HF_TOKEN"
-}
+choice = int(input("Enter your choice (1-4): "))
 
-api_key_name = api_keys["OpenRouter"]
-api_key = os.getenv(api_key_name)
+if choice == 1:
+    print("Gemini")
+elif choice == 2:
+    print("OpenAI")
+elif choice == 3:
+    print("OpenRouter")
+elif choice == 4:
+    print("Hugging Face")
+else:
+    print("Invalid choice")
 
-export OPENROUTER_API_KEY="your-secret-key"
-api_key = os.getenv("OPENROUTER_API_KEY")
-
-api_key = os.getenv("OPENAI_API_KEY")
-
-if not api_key:
-    print("OpenAI API key is not configured.")
-    return
-
-import os 
-
-def get_api_key(provider):
-    api_keys = {
-    "Gemini": "GEMINI_API_KEY",
-    "OpenAI": "OPENAI_API_KEY",
-    "OpenRouter": "OPENROUTER_API_KEY",
-    "Hugging Face": "HF_TOKEN"
-    }
-    
-    if provider not in api_key:
-        print(f"Unsupported AI provider.")
-        return
- 
-    api_key_name = api_keys[provider]
-    api_key = os.getenv(api_key_name)
-     
-    if not api_key:
-        print(f"{provider} key is not configured.")
-        return
-
-    return api_key
-    
+AI provider = ("Gemini", "OpenAI", "OpenRouter", "HuggingFace")
+print("AI provider")
