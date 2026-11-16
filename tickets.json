@@ -33,5 +33,55 @@
         "id": "T007",
         "title": "Printer malfunction",
         "description": "The library printer is not responding when students send documents to print"
+    },
+    {
+        "id": "T008",
+        "title": "malfunction",
+        "description": "Library printer is not responding"
+    },
+    {
+        "id": "T009",
+        "title": "malfunction",
+        "description": "Library printer is not responding"
+    },
+    {
+        "id": "T010",
+        "title": "Software",
+        "description": "Poor network connection"
+    },
+    {
+        "id": "T011",
+        "title": "hardware",
+        "description": "bad mouse"
+    },
+    {
+        "id": "T012",
+        "title": "Hardware",
+        "description": "Keyboard malfunction"
+    },
+    {
+        "id": "T013",
+        "title": "others",
+        "description": "Broken chair"
+    },
+    {
+        "id": "T014",
+        "title": "Software",
+        "description": "Bluetooth not connecting"
+    },
+    {
+        "id": "T015",
+        "title": "Software",
+        "description": "Poor network connection"
+    },
+    {
+        "id": "T016",
+        "title": "Hardware",
+        "description": "Mouse malfunctioning"
+    },
+    {
+        "id": "T017",
+        "title": "Hardware",
+        "description": "Keyboard malfunctioning"
     }
 ]

@@ -1,28 +1,33 @@
+
 import json
 import os
+
 from google import genai
+from openai import OpenAI
+from huggingface_hub import InferenceClient
+
 
 def get_api_key(provider):
     api_keys = {
-    "Gemini": "GEMINI_API_KEY",
-    "OpenAI": "OPENAI_API_KEY",
-    "OpenRouter": "OPENROUTER_API_KEY",
-    "Hugging Face": "HF_TOKEN"
+        "Gemini": "GEMINI_API_KEY",
+        "OpenAI": "OPENAI_API_KEY",
+        "OpenRouter": "OPENROUTER_API_KEY",
+        "Hugging Face": "HF_TOKEN"
     }
-    
+
     if provider not in api_keys:
-        print(f"Unsupported AI provider.")
-        return
- 
+        print("Unsupported AI provider.")
+        return None
+
     api_key_name = api_keys[provider]
     api_key = os.getenv(api_key_name)
-     
+
     if not api_key:
         print(f"{provider} key is not configured.")
-        return
+        return None
 
     return api_key
-    
+
 
 def load_tickets():
     try:
@@ -41,11 +46,12 @@ def load_tickets():
         print("Error: Unable to read tickets.json.")
         raise SystemExit
 
+
 def save_tickets(tickets):
     try:
         with open("tickets.json", "w", encoding="utf-8") as file:
             json.dump(tickets, file, indent=4)
-        
+
         return True
 
     except PermissionError:
@@ -56,10 +62,10 @@ def save_tickets(tickets):
         print("Unable to save tickets.")
         return False
 
+
 def analyze_ticket(description, provider):
-    
-    api_key = os.getenv("GEMINI_API_KEY")
-    api_key = os.getenv("OPENROUTER_API_KEY")
+
+    api_key = get_api_key(provider)
 
     if not api_key:
         print("AI analysis is currently unavailable.")
@@ -67,26 +73,90 @@ def analyze_ticket(description, provider):
 
     prompt = f"""
     Analyze this technical problem:
+
     {description}
 
-    Provide possible causes and troubleshooting steps.
+    Provide:
+    1. Possible causes.
+    2. Troubleshooting steps.
+    3. Recommended investigation.
     """
 
     try:
-        client = genai.Client(api_key=api_key)
 
-        interaction = client.interactions.create(
-            model="gemini-3.8-flash",
-            input=prompt
-        )
+        if provider == "Gemini":
 
-        print(interaction.output_text)
+            client = genai.Client(
+                api_key=api_key,
+                http_options={"timeout": 60000}
+            )
+
+            interaction = client.interactions.create(
+                model="gemini-3.8-flash",
+                input=prompt,
+                timeout=30000
+            )
+
+            result = interaction.output_text
+
+        elif provider == "OpenAI":
+
+            client = OpenAI(api_key=api_key)
+
+            response = client.chat.completions.create(
+                model="gpt-5.5",
+                messages=[
+                    {"role": "user", "content": prompt}
+                ]
+            )
+
+            result = response.choices[0].message.content
+
+        elif provider == "OpenRouter":
+
+            client = OpenAI(
+                api_key=api_key,
+                base_url="https://openrouter.ai/api/v1"
+            )
+
+            response = client.chat.completions.create(
+                model="openai/gpt-5.5",
+                messages=[
+                    {"role": "user", "content": prompt}
+                ]
+            )
+
+            result = response.choices[0].message.content
+
+        elif provider == "Hugging Face":
+
+            client = InferenceClient(
+                api_key=api_key
+            )
+
+            response = client.chat.completions.create(
+                model="openai/gpt-oss-120b",
+                messages=[
+                    {"role": "user", "content": prompt}
+                ]
+            )
+
+            result = response.choices[0].message.content
+
+        else:
+            print("Unsupported AI provider.")
+            return
+
+        print("\nAI Ticket Analysis:")
+        print(result)
 
     except Exception as error:
-        print("AI analysis failed:", error)
-    
+        print("AI analysis failed:", type(error).__name__)
+        print("Error details:", str(error))
+
 
 def main():
+
     tickets = load_tickets()
 
     title = input("Enter ticket title: ")
@@ -96,7 +166,8 @@ def main():
     description = description.strip()
 
     if not title or not description:
-        print("Reject the input") 
+        print("Reject the input")
+
     else:
         print("Accept the input")
 
@@ -108,37 +179,52 @@ def main():
             "description": description
         }
 
-        tickets.append(ticket)        
+        tickets.append(ticket)
+
         saved = save_tickets(tickets)
+
         print("Save result:", saved)
+
         if saved:
             print("Ticket created successfully!")
-            analyze_ticket(ticket["description"])
+
+            ai_providers = (
+                "Gemini",
+                "OpenAI",
+                "OpenRouter",
+                "Hugging Face"
+            )
+
+            print("\nChoose an AI provider:")
+
+            for index, name in enumerate(ai_providers, start=1):
+                print(f"{index}. {name}")
+
+            try:
+                choice = int(input("Enter your choice (1-4): "))
+
+                if 1 <= choice <= 4:
+
+                    provider = ai_providers[choice - 1]
+
+                    print(f"\nSelected provider: {provider}")
+
+                    analyze_ticket(
+                        ticket["description"],
+                        provider
+                    )
+
+                else:
+                    print(
+                        "Invalid choice. Please select between 1 and 4."
+                    )
+
+            except ValueError:
+                print("Invalid input. Please enter a number.")
 
         else:
             print("Ticket creation failed!")
 
-main()
 
-print("Choose an AI provider: ") 
-print("1. Gemini")
-print("2. OpenAI")
-print("3. OpenRouter")
-print("4. Hugging Face")
-choice = input("Enter your choice (1-4): ")
-
-choice = int(input("Enter your choice (1-4): "))
-
-if choice == 1:
-    print("Gemini")
-elif choice == 2:
-    print("OpenAI")
-elif choice == 3:
-    print("OpenRouter")
-elif choice == 4:
-    print("Hugging Face")
-else:
-    print("Invalid choice")
-
-AI provider = ("Gemini", "OpenAI", "OpenRouter", "HuggingFace")
-print("AI provider")
+if __name__ == "__main__":
+    main()

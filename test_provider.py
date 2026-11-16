@@ -21,7 +21,7 @@ def get_api_key(provider):
 
     return api_key
     
-provider = "Claude"
+provider = "Gemini"
 key = get_api_key(provider)
 
 print("Key detected" if key else "Key unavailable")
