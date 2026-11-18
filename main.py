@@ -88,13 +88,12 @@ def analyze_ticket(description, provider):
 
             client = genai.Client(
                 api_key=api_key,
-                http_options={"timeout": 60000}
+                http_options={"timeout": 120000}
             )
 
             interaction = client.interactions.create(
-                model="gemini-3.8-flash",
-                input=prompt,
-                timeout=30000
+                model="gemini-3.5-flash-lite",
+                input=prompt
             )
 
             result = interaction.output_text

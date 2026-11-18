@@ -83,5 +83,30 @@
         "id": "T017",
         "title": "Hardware",
         "description": "Keyboard malfunctioning"
+    },
+    {
+        "id": "T018",
+        "title": "Software",
+        "description": "No internet connection"
+    },
+    {
+        "id": "T019",
+        "title": "Software",
+        "description": "Poor internet connection"
+    },
+    {
+        "id": "T020",
+        "title": "Hardware",
+        "description": "Keyboard malfunctioning"
+    },
+    {
+        "id": "T021",
+        "title": "Hardware",
+        "description": "Mouse malfunctioning"
+    },
+    {
+        "id": "T022",
+        "title": "Software",
+        "description": "Bluetooth malfunctioning"
     }
 ]
